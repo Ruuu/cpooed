@@ -1,0 +1,1 @@
+Katalog z dokumentacj¹ aplikacji oraz algorytmów.
