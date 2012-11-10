@@ -1,1 +1,1 @@
-Katalog ze "Ÿród³ami" artyku³u.
+ï»¿Katalog ze "ÅºrÃ³dÅ‚ami" artykuÅ‚u.

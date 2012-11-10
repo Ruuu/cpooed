@@ -1,1 +1,1 @@
-Katalog ze Ÿród³ami tworzonej aplikacji oraz implementowanych algorytmów.
+ï»¿Katalog ze ÅºrÃ³dÅ‚ami tworzonej aplikacji oraz implementowanych algorytmÃ³w.

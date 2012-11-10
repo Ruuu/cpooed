@@ -1,1 +1,1 @@
-Katalog z dokumentacj¹ aplikacji oraz algorytmów.
+ï»¿Katalog z dokumentacjÄ… aplikacji oraz algorytmÃ³w.
