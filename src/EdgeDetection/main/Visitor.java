@@ -1,6 +1,8 @@
 package main;
 
 import controller.event.ExitEvent;
+import controller.event.OpenImageEvent;
+import controller.event.TestModEvent;
 
 /**
  * Interfejs implementujay interfejs wizytatora
@@ -9,6 +11,22 @@ import controller.event.ExitEvent;
  */
 public interface Visitor
 {
+    /**
+     * Metoda wizytujaca {@link OpenImageEvent}
+     * 
+     * @param openImageEvent
+     *            zdarzenie przycisku do otworzenia nowego obrazu
+     */
+    public void visit(OpenImageEvent openImageEvent);
+    
+    /**
+     * Metoda wizytujaca {@link TestModEvent}
+     * 
+     * @param testModEvent
+     *            zdarzenie przycisku do otworzenia obrazu zmodyfikowanego
+     */
+    public void visit(TestModEvent testModEvent);
+	
     /**
      * Metoda wizytujaca {@link ExitEvent}
      * 

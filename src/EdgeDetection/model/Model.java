@@ -13,11 +13,23 @@ public class Model
     @SuppressWarnings("unused")
 	private final ErrorDialog errorDialog;
     
+    private String currentImagePath;
+    
     /**
      * Konstruktor
      */
     public Model()
     {
         errorDialog = ErrorDialog.getErrorDialog();
+    }
+    
+    public void setCurrentImagePath(String currentImagePath)
+    {
+    	this.currentImagePath = currentImagePath;
+    }
+    
+    public String getCurrentImagePath()
+    {
+    	return this.currentImagePath;
     }
 }

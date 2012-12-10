@@ -2,21 +2,31 @@ package view.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import view.View;
 import view.dialog.AboutProgramDialog;
 import view.listener.ExitListener;
+import view.listener.OpenImageListener;
+import view.listener.TestModListener;
+import view.panel.ImagePanel;
 import controller.event.BrokerActionEvent;
 import javax.swing.JPanel;
 
@@ -40,12 +50,26 @@ public class MainApplicationFrame extends JFrame
     private JMenuBar menuBar;
     /** menu 'Plik' */
     private JMenu fileMenu;
+    /** menu 'Algorytmy' */
+    private JMenu algorithmsMenu;
     /** menu 'Pomoc' */
     private JMenu helpMenu;
     /** element menu do wyswietlenia okna z informacja o programie */
     private JMenuItem aboutProgramMenuItem;
+    /** element menu do zaladowania zdjecia */
+    private JMenuItem loadImageMenuItem;
+    /** element menu do testowania algorytmu przykladowego */
+    private JMenuItem testAlgorithmMenuItem;
     /** element menu do wyjscia z programu */
     private JMenuItem exitMenuItem;
+    
+    /** */
+    private JSplitPane jSplitPane;
+    
+    /** ramka obrazu */
+    private ImageFrame imageFrame;
+    /** */
+    private ImageFrame modImageFrame;
     
     /** oryginalny tytul aplikacji */
     public static final String originalTitle = "Edge Detection v1.0";
@@ -58,8 +82,16 @@ public class MainApplicationFrame extends JFrame
         setTitle(originalTitle);
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
         screenSize = toolkit.getScreenSize();
-        setSize(new Dimension(600, 600));
+        setPreferredSize(screenSize);
 
+        imageFrame = new ImageFrame();
+        modImageFrame = new ImageFrame();
+        
+        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, imageFrame, modImageFrame);
+        jSplitPane.setOneTouchExpandable(true);
+        jSplitPane.setDividerLocation((int)screenSize.getWidth() / 2);
+        jSplitPane.setPreferredSize(new Dimension(800, 600));
+        
         mainViewClass = view;
 
         aboutProgramDialog = new AboutProgramDialog();
@@ -78,6 +110,8 @@ public class MainApplicationFrame extends JFrame
      */
     public void addMultipleListener(final BlockingQueue<BrokerActionEvent> blockingQueue)
     {
+    	loadImageMenuItem.addActionListener(new OpenImageListener(blockingQueue));
+    	testAlgorithmMenuItem.addActionListener(new TestModListener(blockingQueue));
     	exitMenuItem.addActionListener(new ExitListener(blockingQueue));
     	aboutProgramMenuItem.addActionListener(new ActionListener()
 		{
@@ -96,29 +130,45 @@ public class MainApplicationFrame extends JFrame
     {
     	menuBar = new JMenuBar();
         fileMenu = new JMenu();
+        algorithmsMenu = new JMenu();
         helpMenu = new JMenu();
     
         exitMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/exit16.png")));
+        loadImageMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/open16.png")));
+        testAlgorithmMenuItem = new JMenuItem();
         aboutProgramMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/about16.png")));
         
         /**
          * Dodanie Menu do MenuBar'a
          */
         fileMenu.setText("Plik");
+        algorithmsMenu.setText("Algorytmy");
         helpMenu.setText("Pomoc");
         
         fileMenu.setMnemonic('P');
+        algorithmsMenu.setMnemonic('A');
         helpMenu.setMnemonic('O');
 
         menuBar.add(fileMenu);
+        menuBar.add(algorithmsMenu);
         menuBar.add(helpMenu);
         
         setJMenuBar(menuBar);
+        
+        loadImageMenuItem.setText("Otwórz...");
+        loadImageMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+        fileMenu.add(loadImageMenuItem);
+        
+        fileMenu.addSeparator();
         
         exitMenuItem.setText("Wyjście");
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
         fileMenu.add(exitMenuItem);
 
+        testAlgorithmMenuItem.setText("Test algorytmu");
+        testAlgorithmMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl T"));
+        algorithmsMenu.add(testAlgorithmMenuItem);
+        
         aboutProgramMenuItem.setText("O programie");
         helpMenu.add(aboutProgramMenuItem);
     }
@@ -128,9 +178,57 @@ public class MainApplicationFrame extends JFrame
      */
     private void myGroupLayout()
     {	
-    	getContentPane().setLayout(new BorderLayout());
-
+    	setLayout(new BorderLayout());
+    	
+    	JPanel mainPanel = new JPanel();
+    	
+    	mainPanel.setLayout(new BorderLayout());
+    	mainPanel.add(jSplitPane, BorderLayout.CENTER);
+    	add(mainPanel, BorderLayout.CENTER);
+    	
+    	
     	pack();
     	setVisible(true);
+    }
+    
+    /**
+     * 
+     */
+    public void showMainImage(String imagePath)
+    {
+//    	JPanel imagePanel = new ImagePanel(imagePath);
+//    	this.getContentPane().add(imagePanel);
+//    	this.pack();
+    	
+//    	BufferedImage image = null;
+//		try 
+//		{
+//			image = ImageIO.read(new File(imagePath));
+//		} 
+//		catch (IOException e) 
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		ImageIcon imageIcon = new ImageIcon(image);
+//    	JLabel imageLabel = new JLabel(imageIcon);
+//    	Dimension size = new Dimension();
+//    	size.width = imageIcon.getIconWidth();
+//    	size.height = imageIcon.getIconHeight();
+//    	imageLabel.setPreferredSize(size);
+//    	add(imageLabel);
+//    	pack();
+    	
+    	imageFrame.paintImage(imagePath);
+    }
+    
+    /**
+     * 
+     */
+    public void showModImage(String imagePath)
+    {
+    	modImageFrame.paintImage(imagePath);
+    	jSplitPane.setDividerLocation((int)screenSize.getWidth() / 2);
     }
 }

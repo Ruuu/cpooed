@@ -9,6 +9,8 @@ import view.dialog.ErrorDialog;
 import view.frame.DefaultViewChanger;
 import controller.event.BrokerActionEvent;
 import controller.event.ExitEvent;
+import controller.event.OpenImageEvent;
+import controller.event.TestModEvent;
 
 /**
  * Glowna klasa kontrolera - odbiera informacje z widoku, przekazuje je do modelu, wprowadza zmiany na widoku
@@ -68,6 +70,24 @@ public class Controller implements Visitor
             }
         }
     }
+    
+	@Override
+	public void visit(OpenImageEvent openImageEvent)
+	{
+        final String imagePath = defaultViewChanger.openNewImageFromFile();
+        
+        model.setCurrentImagePath(imagePath);
+        
+        defaultViewChanger.showMainImage(imagePath);
+	}
+	
+	@Override
+	public void visit(TestModEvent testModEvent)
+	{
+		// Wykonanie operacji algorytmu i zwrocenie sciezki do nowego obrazka
+		String imagePath = "C:\\Users\\Ru\\Desktop\\modlinbus.png";
+        defaultViewChanger.showModImage(imagePath);
+	}
 
 	@Override
 	public void visit(ExitEvent exitEvent)
