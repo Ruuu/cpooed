@@ -49,6 +49,10 @@ public class DefaultViewChanger
         {
             imagePath = openChooser.getSelectedFile().getPath();
         }
+        else
+        {
+        	imagePath = null;
+        }
 
         return imagePath;
     }

@@ -1,6 +1,16 @@
 package controller;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.concurrent.BlockingQueue;
+
+import javax.imageio.ImageIO;
+
+import Sobel.Sobel;
+
+import Canny.Canny;
 
 import main.Visitable;
 import main.Visitor;
@@ -8,8 +18,10 @@ import model.Model;
 import view.dialog.ErrorDialog;
 import view.frame.DefaultViewChanger;
 import controller.event.BrokerActionEvent;
+import controller.event.CannyEvent;
 import controller.event.ExitEvent;
 import controller.event.OpenImageEvent;
+import controller.event.SobelEvent;
 import controller.event.TestModEvent;
 
 /**
@@ -76,9 +88,12 @@ public class Controller implements Visitor
 	{
         final String imagePath = defaultViewChanger.openNewImageFromFile();
         
-        model.setCurrentImagePath(imagePath);
-        
-        defaultViewChanger.showMainImage(imagePath);
+        if(imagePath != null)
+        {
+	        model.setCurrentImagePath(imagePath);
+	        
+	        defaultViewChanger.showMainImage(imagePath);
+        }
 	}
 	
 	@Override
@@ -88,10 +103,69 @@ public class Controller implements Visitor
 		String imagePath = "C:\\Users\\Ru\\Desktop\\modlinbus.png";
         defaultViewChanger.showModImage(imagePath);
 	}
+	
+	@Override
+	public void visit(CannyEvent cannyEvent)
+	{
+		Canny canny = new Canny(0.5f, 1f);
+		BufferedImage source;
+		try 
+		{
+			System.out.println("Wczytuje plik źródłowy...");
+			source = ImageIO.read(new File(model.getCurrentImagePath()));
+			
+			System.out.println("Uruchamiam algorytm...");
+			BufferedImage canny_image = canny.process(source);
+			
+			String output_name = "output/canny.png";
+			saveImageToFile(output_name, canny_image);
+		    
+		    System.out.println("Wyświetlam zdjęcie...");
+		    defaultViewChanger.showModImage(output_name);
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	@Override
+	public void visit(SobelEvent sobelEvent)
+	{
+		Sobel sobel = new Sobel();
+		BufferedImage source;
+		try 
+		{
+			System.out.println("Wczytuje plik źródłowy...");
+			source = ImageIO.read(new File(model.getCurrentImagePath()));
+			
+			System.out.println("Uruchamiam algorytm...");
+			BufferedImage canny_image = sobel.process(source);
+			
+			String output_name = "output/sobel.png";
+			saveImageToFile(output_name, canny_image);
+		    
+		    System.out.println("Wyświetlam zdjęcie...");
+		    defaultViewChanger.showModImage(output_name);
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 
 	@Override
 	public void visit(ExitEvent exitEvent)
 	{
 		System.exit(0);
+	}
+	
+	private void saveImageToFile(String image_path, BufferedImage image) throws IOException
+	{
+		System.out.println("Zapisuje plik wynikowy do pliku...");
+		File outputfile = new File(image_path);
+	    ImageIO.write(image, "png", outputfile);
 	}
 }

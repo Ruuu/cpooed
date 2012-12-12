@@ -1,7 +1,9 @@
 package main;
 
+import controller.event.CannyEvent;
 import controller.event.ExitEvent;
 import controller.event.OpenImageEvent;
+import controller.event.SobelEvent;
 import controller.event.TestModEvent;
 
 /**
@@ -26,6 +28,22 @@ public interface Visitor
      *            zdarzenie przycisku do otworzenia obrazu zmodyfikowanego
      */
     public void visit(TestModEvent testModEvent);
+    
+    /**
+     * Metoda wizytujaca {@link CannyEvent}
+     * 
+     * @param cannyEvent
+     *            zdarzenie przycisku do otworzenia obrazu zmodyfikowanego
+     */
+    public void visit(CannyEvent cannyEvent);
+    
+    /**
+     * Metoda wizytujaca {@link SobelEvent}
+     * 
+     * @param sobelEvent
+     *            zdarzenie przycisku do otworzenia obrazu zmodyfikowanego
+     */
+    public void visit(SobelEvent sobelEvent);
 	
     /**
      * Metoda wizytujaca {@link ExitEvent}

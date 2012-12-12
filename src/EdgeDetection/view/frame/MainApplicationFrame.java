@@ -23,11 +23,15 @@ import javax.swing.KeyStroke;
 
 import view.View;
 import view.dialog.AboutProgramDialog;
+import view.listener.CannyListener;
 import view.listener.ExitListener;
 import view.listener.OpenImageListener;
+import view.listener.SobelListener;
 import view.listener.TestModListener;
 import view.panel.ImagePanel;
 import controller.event.BrokerActionEvent;
+import controller.event.CannyEvent;
+
 import javax.swing.JPanel;
 
 /**
@@ -60,6 +64,10 @@ public class MainApplicationFrame extends JFrame
     private JMenuItem loadImageMenuItem;
     /** element menu do testowania algorytmu przykladowego */
     private JMenuItem testAlgorithmMenuItem;
+    /** element menu do testowania algorytmu Canny */
+    private JMenuItem cannyMenuItem;
+    /** element menu do testowania algorytmu Sobel */
+    private JMenuItem sobelMenuItem;
     /** element menu do wyjscia z programu */
     private JMenuItem exitMenuItem;
     
@@ -112,6 +120,8 @@ public class MainApplicationFrame extends JFrame
     {
     	loadImageMenuItem.addActionListener(new OpenImageListener(blockingQueue));
     	testAlgorithmMenuItem.addActionListener(new TestModListener(blockingQueue));
+    	cannyMenuItem.addActionListener(new CannyListener(blockingQueue));
+    	sobelMenuItem.addActionListener(new SobelListener(blockingQueue));
     	exitMenuItem.addActionListener(new ExitListener(blockingQueue));
     	aboutProgramMenuItem.addActionListener(new ActionListener()
 		{
@@ -136,6 +146,8 @@ public class MainApplicationFrame extends JFrame
         exitMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/exit16.png")));
         loadImageMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/open16.png")));
         testAlgorithmMenuItem = new JMenuItem();
+        cannyMenuItem = new JMenuItem();
+        sobelMenuItem = new JMenuItem();
         aboutProgramMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/about16.png")));
         
         /**
@@ -168,6 +180,14 @@ public class MainApplicationFrame extends JFrame
         testAlgorithmMenuItem.setText("Test algorytmu");
         testAlgorithmMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl T"));
         algorithmsMenu.add(testAlgorithmMenuItem);
+       
+        cannyMenuItem.setText("Canny Edge Detector");
+        cannyMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));
+        algorithmsMenu.add(cannyMenuItem); 
+        
+        sobelMenuItem.setText("Sobel Edge Detector");
+        sobelMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl S"));
+        algorithmsMenu.add(sobelMenuItem); 
         
         aboutProgramMenuItem.setText("O programie");
         helpMenu.add(aboutProgramMenuItem);
