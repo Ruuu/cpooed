@@ -3,6 +3,7 @@ package view.frame;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -86,7 +87,22 @@ public class DefaultViewChanger
             }
         });
     }
-
+    
+    /**
+     * Funkcja wyswietla okno dialogowe do wpisania parametrow algorytmu Canny
+     * 
+     */
+    public String showCannyParametersDialog(boolean low)
+    {
+    	String param = "";
+    	if(low)
+    		param = JOptionPane.showInputDialog(null, "Wpisz wartość niskiego progu: ", "", 1);
+    	else
+    		param = JOptionPane.showInputDialog(null, "Wpisz wartość wysokiego progu: ", "", 1);
+    	
+    	return param;
+    }
+    
     /**
      * Funkcja wyswietla okno dialogowe z odpowiednia informacja
      * 

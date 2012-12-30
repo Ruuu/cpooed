@@ -107,7 +107,37 @@ public class Controller implements Visitor
 	@Override
 	public void visit(CannyEvent cannyEvent)
 	{
-		Canny canny = new Canny(0.5f, 1f);
+		String low_treshold_str = defaultViewChanger.showCannyParametersDialog(true);
+		Float low_treshold = 0.0f;
+		try 
+		{
+			if(low_treshold_str == null)
+				throw new NumberFormatException();
+			low_treshold = new Float(low_treshold_str);
+		} 
+		catch (NumberFormatException e) 
+		{
+			System.out.println("Przyjmuje wartość domyślną low_treshold: " + 0.5f);
+			errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną low_treshold: " + 0.5f);
+			low_treshold = 0.5f;
+		}
+	
+		String high_treshold_str = defaultViewChanger.showCannyParametersDialog(false);
+		Float high_treshold = 1.0f;
+		try 
+		{
+			if(high_treshold_str == null)
+				throw new NumberFormatException();
+			high_treshold = new Float(high_treshold_str);
+		} 
+		catch (NumberFormatException e) 
+		{
+			System.out.println("Przyjmuje wartość domyślną high_treshold: " + 1.0f);
+			errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną high_treshold: " + 1.0f);
+			high_treshold = 1.0f;
+		}
+		
+		Canny canny = new Canny(low_treshold, high_treshold);
 		BufferedImage source;
 		try 
 		{

@@ -18,6 +18,7 @@ public class ErrorDialog
     private ErrorDialog()
     {
         informationDialog = new InformationDialog(null, "", "Błąd wykonania programu!");
+    	informationDialog.setSize(500, 100);
     }
 
     /**
