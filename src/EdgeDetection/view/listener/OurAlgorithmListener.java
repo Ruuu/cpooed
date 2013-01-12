@@ -5,17 +5,15 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.BlockingQueue;
 
 import view.dialog.ErrorDialog;
-
 import controller.event.BrokerActionEvent;
-import controller.event.ExitEvent;
-import controller.event.TestModEvent;
+import controller.event.OurAlgorithmEvent;
 
 /**
  * Nasluchiwacz dla przycisku do zamykania aplikacji
  * @author Piotr Róż
  * @since 2012-11-11
  */
-public class TestModListener implements ActionListener
+public class OurAlgorithmListener implements ActionListener
 {
     /** kolejka blokujaca */
     private final BlockingQueue<BrokerActionEvent> blockingQueue;
@@ -28,7 +26,7 @@ public class TestModListener implements ActionListener
      * @param blockingQueue
      *            kolejka blokujaca
      */
-    public TestModListener(final BlockingQueue<BrokerActionEvent> blockingQueue)
+    public OurAlgorithmListener(final BlockingQueue<BrokerActionEvent> blockingQueue)
     {
         this.blockingQueue = blockingQueue;
         errorDialog = ErrorDialog.getErrorDialog();
@@ -40,11 +38,11 @@ public class TestModListener implements ActionListener
         try
         {
         	// wrzucenie zdarzenia do kolejki
-            blockingQueue.put(new TestModEvent());
+            blockingQueue.put(new OurAlgorithmEvent());
         }
         catch(final InterruptedException e)
         {
-            errorDialog.showErrorDialog("B��d podczas wstawiania do kolejki!");
+            errorDialog.showErrorDialog("Błąd podczas wstawiania do kolejki!");
             System.exit(0);
         }
     }

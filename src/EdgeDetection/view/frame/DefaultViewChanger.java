@@ -3,7 +3,6 @@ package view.frame;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,6 +23,8 @@ public class DefaultViewChanger
     private final MainApplicationFrame mainApplicationFrame;
     /** dialog informujacy uzytkownika o wystapieniu bledu w dzialaniu aplikacji */
     private final ErrorDialog errorDialog;
+    private String initOpenPath = ".";
+    
 
     public DefaultViewChanger(final MainApplicationFrame mainApplicationFrame)
     {
@@ -40,7 +41,7 @@ public class DefaultViewChanger
     {
         final String[] extension = ImageIO.getReaderFileSuffixes();
         final FileNameExtensionFilter filter = new FileNameExtensionFilter("Pliki obrazów", extension);
-        final JFileChooser openChooser = new JFileChooser();
+        final JFileChooser openChooser = new JFileChooser(initOpenPath);
         openChooser.setFileFilter(filter);
         openChooser.setAccessory(new ImagePreviewerInFileChooser(openChooser));
         openChooser.setFileView(new FileIconInFileChooser(filter, new ImageIcon(Model.class.getResource("otherIcons/imageIcon16.png"))));
@@ -49,10 +50,7 @@ public class DefaultViewChanger
         if(result == JFileChooser.APPROVE_OPTION)
         {
             imagePath = openChooser.getSelectedFile().getPath();
-        }
-        else
-        {
-        	imagePath = null;
+            initOpenPath = openChooser.getSelectedFile().getPath();
         }
 
         return imagePath;
@@ -101,6 +99,24 @@ public class DefaultViewChanger
     		param = JOptionPane.showInputDialog(null, "Wpisz wartość wysokiego progu: ", "", 1);
     	
     	return param;
+    }
+    
+    /**
+     * Funkcja wyswietla okno dialogowe do wpisania parametrow algorytmu autorskiego
+     * 
+     */
+    public String showOurAlgorithmThresholdParameterDialog(Object initialValue)
+    {
+    	return JOptionPane.showInputDialog(mainApplicationFrame, "Wpisz wartość progu odchylenia standardowego: ", initialValue);
+    }
+    
+    /**
+     * Funkcja wyswietla okno dialogowe do wpisania parametrow algorytmu autorskiego
+     * 
+     */
+    public String showOurAlgorithmRangeParameterDialog(Object initialValue)
+    {
+    	return JOptionPane.showInputDialog(mainApplicationFrame, "Wpisz zasięg sąsiedztwa dla analizy przekroczenia progu odchylenia standardowego: ", initialValue);
     }
     
     /**

@@ -5,12 +5,8 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.BlockingQueue;
 
 import view.dialog.ErrorDialog;
-
 import controller.event.BrokerActionEvent;
-import controller.event.CannyEvent;
-import controller.event.ExitEvent;
 import controller.event.SobelEvent;
-import controller.event.TestModEvent;
 
 /**
  * Nasluchiwacz dla algorytmu Canny
@@ -46,7 +42,7 @@ public class SobelListener implements ActionListener
         }
         catch(final InterruptedException e)
         {
-            errorDialog.showErrorDialog("B��d podczas wstawiania do kolejki!");
+            errorDialog.showErrorDialog("Błąd podczas wstawiania do kolejki!");
             System.exit(0);
         }
     }
