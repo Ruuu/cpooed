@@ -1,6 +1,7 @@
 package cpoo.noise.model;
 
 import java.awt.image.BufferedImage;
+import java.util.Locale;
 
 import cpoo.noise.controller.Controller;
 import cpoo.noise.model.generators.GaussianNoiseGenerator;
@@ -66,8 +67,13 @@ public class Model {
 				mean, variance);
 		// Odciecie rozszerzenia z nazwy pliku
 		name = name.substring(0, name.lastIndexOf('.'));
-		Controller.addImageTab(result, name + "_gauss_mean_" + mean + "_var_"
-				+ variance + "_.png");
+		Controller.addImageTab(
+				result,
+				name + "_gauss_mean_"
+						+ String.format(Locale.ENGLISH, "%.2f%n", mean)
+						+ "_var_"
+						+ String.format(Locale.ENGLISH, "%.2f%n", variance)
+						+ ".png");
 	}
 
 	/**
@@ -143,8 +149,13 @@ public class Model {
 				v1, p2, v2);
 		// Odciecie rozszerzenia z nazwy pliku
 		name = name.substring(0, name.lastIndexOf('.'));
-		Controller.addImageTab(result, name + "_impulse_p1_" + p1 + "_v1_" + v1
-				+ "_p2_" + p2 + "_v2_" + v2 + "_.png");
+		Controller.addImageTab(
+				result,
+				name + "_impulse_p1_"
+						+ String.format(Locale.ENGLISH, "%.2f%n", p1) + "_v1_"
+						+ v1 + "_p2_"
+						+ String.format(Locale.ENGLISH, "%.2f%n", p2) + "_v2_"
+						+ v2 + ".png");
 	}
 
 }

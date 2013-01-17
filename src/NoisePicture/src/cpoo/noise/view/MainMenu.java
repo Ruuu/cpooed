@@ -18,7 +18,6 @@ import cpoo.noise.controller.Controller;
 import cpoo.noise.view.dialogs.GaussDialog;
 import cpoo.noise.view.dialogs.ImpulseDialog;
 
-
 /**
  * 
  * @author Rafał Radziejewski
@@ -165,9 +164,9 @@ public class MainMenu extends JMenuBar {
 		ImpulseDialog dialog = new ImpulseDialog(mainWindow, true);
 		if (dialog.getAnswer()) {
 
-			int v1 = Integer.valueOf(dialog.getVal1().getText());
+			double v1 = Double.valueOf(dialog.getVal1().getText());
 			double p1 = Double.valueOf(dialog.getP1().getText());
-			int v2 = Integer.valueOf(dialog.getVal2().getText());
+			double v2 = Double.valueOf(dialog.getVal2().getText());
 			double p2 = Double.valueOf(dialog.getP2().getText());
 
 			boolean isSerial = Boolean.valueOf(dialog.getSerialGeneration()
@@ -181,21 +180,24 @@ public class MainMenu extends JMenuBar {
 			if (isSerial) {
 				int numberOfPictures = Integer.valueOf(dialog
 						.getNumberOfPictures().getText());
-				int v1Step = Integer.valueOf(dialog.getVal1Step().getText());
+				double v1Step = Double.valueOf(dialog.getVal1Step().getText());
 				double p1Step = Double.valueOf(dialog.getP1Step().getText());
-				int v2Step = Integer.valueOf(dialog.getVal2Step().getText());
+				double v2Step = Double.valueOf(dialog.getVal2Step().getText());
 				double p2Step = Double.valueOf(dialog.getP2Step().getText());
 
-				Controller.generateImpulseNoise(input, title, p1, v1, p2, v2,
-						numberOfPictures, p1Step, v1Step, p2Step, v2Step);
+				Controller.generateImpulseNoise(input, title, p1, (int) v1, p2,
+						(int) v2, numberOfPictures, p1Step, (int) v1Step,
+						p2Step, (int) v2Step);
 			} else {
-				Controller.generateImpulseNoise(input, title, p1, v1, p2, v2);
+				Controller.generateImpulseNoise(input, title, p1, (int) v1, p2,
+						(int) v2);
 			}
 		}
 	}
 
 	/**
 	 * Obsługa zamkniecia wszystkich zakładek
+	 * 
 	 * @param e
 	 */
 	static void handleClear(ActionEvent e) {
@@ -219,6 +221,7 @@ public class MainMenu extends JMenuBar {
 
 	/**
 	 * Obsługa wyjścia z programu.
+	 * 
 	 * @param e
 	 */
 	protected static void handleExit(ActionEvent e) {

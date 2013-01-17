@@ -5,7 +5,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +18,7 @@ import javax.swing.JToolBar;
 
 /**
  * Pasek narzędzi.
+ * 
  * @author Rafał Radziejewski
  * 
  */
@@ -21,23 +26,61 @@ import javax.swing.JToolBar;
 public class ToolBar extends JPanel {
 
 	private JToolBar bar = new JToolBar();
-	private static final String RESOURCES = "resources/";
 
-	private JButton load = new JButton(new ImageIcon(RESOURCES + "load.png"));
-	private JButton save = new JButton(new ImageIcon(RESOURCES + "save.png"));
-	private JButton exit = new JButton(new ImageIcon(RESOURCES + "exit.png"));
-	private JButton clear = new JButton(new ImageIcon(RESOURCES + "clear.png"));
-	private JButton runGauss = new JButton(new ImageIcon(RESOURCES + "runGauss.png"));
-	private JButton runImpulse = new JButton(new ImageIcon(RESOURCES + "runImpulse.png"));
-	private JButton close = new JButton(new ImageIcon(RESOURCES + "close.png"));
+	private JButton load;
+	private JButton save;
+	private JButton clear;
+	private JButton exit;
+	private JButton runGauss;
+	private JButton runImpulse;
+	private JButton close;
 
 	ToolBar() {
 		super();
+		loadIcons();
 		addComponents();
 		setTooltips();
 		addListeners();
 		setProperties();
 		add(bar, BorderLayout.WEST);
+	}
+
+	private void loadIcons() {
+		try {
+			ClassLoader classLoader = Thread.currentThread()
+					.getContextClassLoader();
+
+			InputStream is = classLoader.getResourceAsStream("load.png");
+			BufferedImage bi = ImageIO.read(is);
+			load = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("save.png");
+			bi = ImageIO.read(is);
+			save = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("clear.png");
+			bi = ImageIO.read(is);
+			clear = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("exit.png");
+			bi = ImageIO.read(is);
+			exit = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("runGauss.png");
+			bi = ImageIO.read(is);
+			runGauss = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("runImpulse.png");
+			bi = ImageIO.read(is);
+			runImpulse = new JButton(new ImageIcon(bi));
+
+			is = classLoader.getResourceAsStream("close.png");
+			bi = ImageIO.read(is);
+			close = new JButton(new ImageIcon(bi));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setProperties() {
@@ -49,8 +92,8 @@ public class ToolBar extends JPanel {
 		bar.setPreferredSize(d);
 		bar.setMaximumSize(d);
 		bar.setMinimumSize(d);
-		
-		//FIXME setButtonsEnabled(false);
+
+		// FIXME setButtonsEnabled(false);
 		setButtonsEnabled(true);
 	}
 
@@ -73,7 +116,7 @@ public class ToolBar extends JPanel {
 		clear.setToolTipText("Zamknij wsztstkie zakładki");
 		runGauss.setToolTipText("Uruchom zaszumianie szumem Gaussa");
 		runImpulse.setToolTipText("Uruchom zaszumianie szumem impulsowym");
-		
+
 		exit.setToolTipText("Wyjdź z programu");
 		close.setToolTipText("Zamknij bieżący plik");
 	}
@@ -119,14 +162,14 @@ public class ToolBar extends JPanel {
 				MainMenu.handleRunImpulse();
 			}
 		});
-		
+
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MainMenu.handleFileClose();
 			}
 		});
 	}
-	
+
 	public JToolBar getBar() {
 		return bar;
 	}
@@ -150,7 +193,7 @@ public class ToolBar extends JPanel {
 	public JButton getRunGauss() {
 		return runGauss;
 	}
-	
+
 	public JButton getRunImpulse() {
 		return runGauss;
 	}
