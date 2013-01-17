@@ -3,26 +3,25 @@ package controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Savepoint;
 import java.util.concurrent.BlockingQueue;
 
 import javax.imageio.ImageIO;
-
-import Sobel.Sobel;
-
-import Canny.Canny;
+import javax.swing.JOptionPane;
 
 import main.Visitable;
 import main.Visitor;
 import model.Model;
 import view.dialog.ErrorDialog;
 import view.frame.DefaultViewChanger;
+import Canny.Canny;
+import OurAlgorithm.OurAlgorithm;
+import Sobel.Sobel;
 import controller.event.BrokerActionEvent;
 import controller.event.CannyEvent;
 import controller.event.ExitEvent;
 import controller.event.OpenImageEvent;
+import controller.event.OurAlgorithmEvent;
 import controller.event.SobelEvent;
-import controller.event.TestModEvent;
 
 /**
  * Glowna klasa kontrolera - odbiera informacje z widoku, przekazuje je do modelu, wprowadza zmiany na widoku
@@ -77,7 +76,7 @@ public class Controller implements Visitor
             }
             catch(final InterruptedException e)
             {
-                errorDialog.showErrorDialog("B��d podczas wyjmowania z kolejki!");
+                errorDialog.showErrorDialog("Błąd podczas wyjmowania z kolejki!");
                 System.exit(0);
             }
         }
@@ -96,51 +95,113 @@ public class Controller implements Visitor
         }
 	}
 	
+
+	/**
+	 * Prosty zaimplementowany wlasnorecznie algorytm
+	 */
 	@Override
-	public void visit(TestModEvent testModEvent)
-	{
-		// Wykonanie operacji algorytmu i zwrocenie sciezki do nowego obrazka
-		String imagePath = "C:\\Users\\Ru\\Desktop\\modlinbus.png";
-        defaultViewChanger.showModImage(imagePath);
+	public void visit(OurAlgorithmEvent basicEvent){
+		OurAlgorithm alg = new OurAlgorithm();
+		BufferedImage source;
+		try {
+			if (model.getCurrentImagePath() == null || model.getCurrentImagePath().isEmpty() ){
+				throw new Exception("Brak pliku wejściowego!");
+			}
+			
+			//popros o podanie parametru progu wariancji
+			String treshold = defaultViewChanger.showOurAlgorithmThresholdParameterDialog(OurAlgorithm.getStdevTreshold());
+			try 
+			{
+				if(treshold == null || treshold.isEmpty() )
+					throw new NumberFormatException();
+				OurAlgorithm.setStdevTreshold( new Float(treshold) );
+			} 
+			catch (NumberFormatException e) 
+			{
+				System.out.println("Przyjmuje wartość domyślną treshold = " + OurAlgorithm.getStdevTreshold() );
+				errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną treshold = " + OurAlgorithm.getStdevTreshold() );
+			}
+
+			// popros o podanie parametru zasiegu sasiedztwa
+			String range = defaultViewChanger.showOurAlgorithmRangeParameterDialog(OurAlgorithm.getStdevRange() );
+			try 
+			{
+				if(range == null || range.isEmpty() )
+					throw new NumberFormatException();
+				OurAlgorithm.setStdevRange( new Integer(range) );
+			} 
+			catch (NumberFormatException e) 
+			{
+				System.out.println("Przyjmuje wartość domyślną range = " + OurAlgorithm.getStdevRange() );
+				errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną range = " + OurAlgorithm.getStdevRange() );
+			}
+			
+			
+			
+			System.out.println("Wczytuje plik źródłowy...");
+			source = ImageIO.read( new File(model.getCurrentImagePath()) );
+			
+			System.out.println("Uruchamiam algorytm...");
+			BufferedImage image = alg.process(source);
+			
+			String outputName = "output/basic.png";
+			saveImageToFile(outputName, image);
+		    
+		    System.out.println("Wyświetlam zdjęcie...");
+		    defaultViewChanger.showModImage(outputName);
+
+		} 
+		catch (Exception e) 
+		{
+			if ( defaultViewChanger != null )
+				defaultViewChanger.showInformationDialog(e.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE );
+				
+			e.printStackTrace();
+		} 
 	}
 	
 	@Override
 	public void visit(CannyEvent cannyEvent)
 	{
-		String low_treshold_str = defaultViewChanger.showCannyParametersDialog(true);
-		Float low_treshold = 0.0f;
 		try 
 		{
-			if(low_treshold_str == null)
-				throw new NumberFormatException();
-			low_treshold = new Float(low_treshold_str);
-		} 
-		catch (NumberFormatException e) 
-		{
-			System.out.println("Przyjmuje wartość domyślną low_treshold: " + 0.5f);
-			errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną low_treshold: " + 0.5f);
-			low_treshold = 0.5f;
-		}
-	
-		String high_treshold_str = defaultViewChanger.showCannyParametersDialog(false);
-		Float high_treshold = 1.0f;
-		try 
-		{
-			if(high_treshold_str == null)
-				throw new NumberFormatException();
-			high_treshold = new Float(high_treshold_str);
-		} 
-		catch (NumberFormatException e) 
-		{
-			System.out.println("Przyjmuje wartość domyślną high_treshold: " + 1.0f);
-			errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną high_treshold: " + 1.0f);
-			high_treshold = 1.0f;
-		}
+			if (model.getCurrentImagePath() == null || model.getCurrentImagePath().isEmpty() ){
+				throw new Exception("Brak pliku wejściowego!");
+			}
+			
+			String low_treshold_str = defaultViewChanger.showCannyParametersDialog(true);
+			Float low_treshold = 0.0f;
+			try 
+			{
+				if(low_treshold_str == null)
+					throw new NumberFormatException();
+				low_treshold = new Float(low_treshold_str);
+			} 
+			catch (NumberFormatException e) 
+			{
+				System.out.println("Przyjmuje wartość domyślną low_treshold: " + 0.5f);
+				errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną low_treshold: " + 0.5f);
+				low_treshold = 0.5f;
+			}
 		
-		Canny canny = new Canny(low_treshold, high_treshold);
-		BufferedImage source;
-		try 
-		{
+			String high_treshold_str = defaultViewChanger.showCannyParametersDialog(false);
+			Float high_treshold = 1.0f;
+			try 
+			{
+				if(high_treshold_str == null)
+					throw new NumberFormatException();
+				high_treshold = new Float(high_treshold_str);
+			} 
+			catch (NumberFormatException e) 
+			{
+				System.out.println("Przyjmuje wartość domyślną high_treshold: " + 1.0f);
+				errorDialog.showErrorDialog("Błędnie wpisania wartość! Przyjmuje wartość domyślną high_treshold: " + 1.0f);
+				high_treshold = 1.0f;
+			}
+		
+			Canny canny = new Canny(low_treshold, high_treshold);
+			BufferedImage source;
+
 			System.out.println("Wczytuje plik źródłowy...");
 			source = ImageIO.read(new File(model.getCurrentImagePath()));
 			
@@ -153,9 +214,11 @@ public class Controller implements Visitor
 		    System.out.println("Wyświetlam zdjęcie...");
 		    defaultViewChanger.showModImage(output_name);
 		} 
-		catch (IOException e) 
+		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
+			if ( defaultViewChanger != null )
+				defaultViewChanger.showInformationDialog(e.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE );
+				
 			e.printStackTrace();
 		} 
 	}
@@ -167,6 +230,10 @@ public class Controller implements Visitor
 		BufferedImage source;
 		try 
 		{
+			if (model.getCurrentImagePath() == null || model.getCurrentImagePath().isEmpty() ){
+				throw new Exception("Brak pliku wejściowego!");
+			}
+			
 			System.out.println("Wczytuje plik źródłowy...");
 			source = ImageIO.read(new File(model.getCurrentImagePath()));
 			
@@ -179,9 +246,11 @@ public class Controller implements Visitor
 		    System.out.println("Wyświetlam zdjęcie...");
 		    defaultViewChanger.showModImage(output_name);
 		} 
-		catch (IOException e) 
+		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
+			if ( defaultViewChanger != null )
+				defaultViewChanger.showInformationDialog(e.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE );
+				
 			e.printStackTrace();
 		} 
 	}

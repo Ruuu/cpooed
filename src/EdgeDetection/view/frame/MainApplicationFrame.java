@@ -2,22 +2,17 @@ package view.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
@@ -26,13 +21,9 @@ import view.dialog.AboutProgramDialog;
 import view.listener.CannyListener;
 import view.listener.ExitListener;
 import view.listener.OpenImageListener;
+import view.listener.OurAlgorithmListener;
 import view.listener.SobelListener;
-import view.listener.TestModListener;
-import view.panel.ImagePanel;
 import controller.event.BrokerActionEvent;
-import controller.event.CannyEvent;
-
-import javax.swing.JPanel;
 
 /**
  * Klasa opisujaca glowne okno programu
@@ -62,8 +53,9 @@ public class MainApplicationFrame extends JFrame
     private JMenuItem aboutProgramMenuItem;
     /** element menu do zaladowania zdjecia */
     private JMenuItem loadImageMenuItem;
+
     /** element menu do testowania algorytmu przykladowego */
-    private JMenuItem testAlgorithmMenuItem;
+    private JMenuItem ourAlgoritmhMenuItem;
     /** element menu do testowania algorytmu Canny */
     private JMenuItem cannyMenuItem;
     /** element menu do testowania algorytmu Sobel */
@@ -119,7 +111,7 @@ public class MainApplicationFrame extends JFrame
     public void addMultipleListener(final BlockingQueue<BrokerActionEvent> blockingQueue)
     {
     	loadImageMenuItem.addActionListener(new OpenImageListener(blockingQueue));
-    	testAlgorithmMenuItem.addActionListener(new TestModListener(blockingQueue));
+    	ourAlgoritmhMenuItem.addActionListener(new OurAlgorithmListener(blockingQueue));
     	cannyMenuItem.addActionListener(new CannyListener(blockingQueue));
     	sobelMenuItem.addActionListener(new SobelListener(blockingQueue));
     	exitMenuItem.addActionListener(new ExitListener(blockingQueue));
@@ -145,7 +137,7 @@ public class MainApplicationFrame extends JFrame
     
         exitMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/exit16.png")));
         loadImageMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/open16.png")));
-        testAlgorithmMenuItem = new JMenuItem();
+        ourAlgoritmhMenuItem = new JMenuItem();
         cannyMenuItem = new JMenuItem();
         sobelMenuItem = new JMenuItem();
         aboutProgramMenuItem = new JMenuItem(new ImageIcon(MainApplicationFrame.class.getResource("buttonIcons/about16.png")));
@@ -176,10 +168,10 @@ public class MainApplicationFrame extends JFrame
         exitMenuItem.setText("Wyjście");
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
         fileMenu.add(exitMenuItem);
-
-        testAlgorithmMenuItem.setText("Test algorytmu");
-        testAlgorithmMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl T"));
-        algorithmsMenu.add(testAlgorithmMenuItem);
+        
+        ourAlgoritmhMenuItem.setText("Autorski prosty algorytm");
+        ourAlgoritmhMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl B"));
+        algorithmsMenu.add(ourAlgoritmhMenuItem);
        
         cannyMenuItem.setText("Canny Edge Detector");
         cannyMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));

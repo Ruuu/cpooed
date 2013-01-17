@@ -1,10 +1,10 @@
 package main;
 
+import controller.event.OurAlgorithmEvent;
 import controller.event.CannyEvent;
 import controller.event.ExitEvent;
 import controller.event.OpenImageEvent;
 import controller.event.SobelEvent;
-import controller.event.TestModEvent;
 
 /**
  * Interfejs implementujay interfejs wizytatora
@@ -21,13 +21,14 @@ public interface Visitor
      */
     public void visit(OpenImageEvent openImageEvent);
     
+    
     /**
-     * Metoda wizytujaca {@link TestModEvent}
+     * Metoda wizytujaca {@link OurAlgorithmEvent}
      * 
-     * @param testModEvent
+     * @param basicEvent
      *            zdarzenie przycisku do otworzenia obrazu zmodyfikowanego
      */
-    public void visit(TestModEvent testModEvent);
+    public void visit(OurAlgorithmEvent basicEvent);
     
     /**
      * Metoda wizytujaca {@link CannyEvent}

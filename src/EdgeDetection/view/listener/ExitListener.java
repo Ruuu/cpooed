@@ -43,7 +43,7 @@ public class ExitListener implements ActionListener
         }
         catch(final InterruptedException e)
         {
-            errorDialog.showErrorDialog("B��d podczas wstawiania do kolejki!");
+            errorDialog.showErrorDialog("Błąd podczas wstawiania do kolejki!");
             System.exit(0);
         }
     }
