@@ -108,7 +108,7 @@ public class Controller {
 		try {
 			view.getMainWindow().getContent().addExistingItem(result, title);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}

@@ -93,8 +93,7 @@ public class ToolBar extends JPanel {
 		bar.setMaximumSize(d);
 		bar.setMinimumSize(d);
 
-		// FIXME setButtonsEnabled(false);
-		setButtonsEnabled(true);
+		setButtonsEnabled(false);
 	}
 
 	private void addComponents() {

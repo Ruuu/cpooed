@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -39,8 +40,8 @@ public class MainMenu extends JMenuBar {
 	private JMenuItem runImpulse = new JMenuItem("Szum Impulsowy");
 
 	private JMenu help = new JMenu("Pomoc");
-	private JMenuItem helpContent = new JMenuItem("Zawartość pomocy");
-	private JMenuItem autors = new JMenuItem("Autorzy");
+	// private JMenuItem helpContent = new JMenuItem("Zawartość pomocy");
+	// /private JMenuItem autors = new JMenuItem("Autorzy");
 	private JMenuItem about = new JMenuItem("O programie");
 
 	MainMenu(MainWindow mW) {
@@ -61,8 +62,9 @@ public class MainMenu extends JMenuBar {
 		noise.add(runImpulse);
 		add(noise);
 
-		help.add(helpContent);
-		help.add(autors);
+		/*
+		 * help.add(helpContent); help.add(autors);
+		 */
 		help.add(about);
 		add(help);
 	}
@@ -90,16 +92,12 @@ public class MainMenu extends JMenuBar {
 			}
 		});
 
-		helpContent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				handleHelp(e);
-			}
-		});
-		autors.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				handleAutoors(e);
-			}
-		});
+		/*
+		 * helpContent.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { handleHelp(e); } });
+		 * autors.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { handleAutoors(e); } });
+		 */
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				handleAbout(e);
@@ -205,7 +203,11 @@ public class MainMenu extends JMenuBar {
 	}
 
 	protected void handleAbout(ActionEvent e) {
-		// TODO Auto-generated method stub
+		JOptionPane
+				.showMessageDialog(
+						mainWindow,
+						"NoisePicture v1.0\nProgram służący do dodawania do zadanych obrazów szumu Gaussa \ni/lub szumu impulsowego.\n\nAutor: Rafał Radziejewski.",
+						"", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
@@ -246,11 +248,17 @@ public class MainMenu extends JMenuBar {
 			File file = new File(name);
 			try {
 				BufferedImage content = ImageIO.read(file);
-
 				((ContentPane) mainWindow.getContentPane()).addExistingItem(
 						content, fileChooser.getSelectedFile().getName());
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(mainWindow,
+						"Błąd wejścia/wyjścia.", "", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (Exception e0) {
+				JOptionPane.showMessageDialog(mainWindow,
+						"Niespodziewany błąd odczytu pliku.", "",
+						JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 
 		}
@@ -265,7 +273,7 @@ public class MainMenu extends JMenuBar {
 
 		String title = ((ContentPane) mainWindow.getContentPane())
 				.getInputTitle();
-
+		title = title.replaceAll("\\s+", "");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setSelectedFile(new File(title));
 		int returnVal = fileChooser.showSaveDialog(mainWindow);
@@ -283,8 +291,16 @@ public class MainMenu extends JMenuBar {
 				// Zapis w tym samym formacie co obraz zrodlowy
 				String ext = title.substring(title.lastIndexOf('.') + 1);
 				ImageIO.write(content, ext, fos);
+				fos.close();
+			} catch (FileNotFoundException e0) {
+				JOptionPane.showMessageDialog(mainWindow,
+						"Niepoprawna nazwa pliku.", "",
+						JOptionPane.ERROR_MESSAGE);
+				return;
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(mainWindow,
+						"Błąd wejścia/wyjścia.", "", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			JOptionPane.showMessageDialog(mainWindow, "Plik '" + fileName
 					+ "' został poprawnie zapisany.", "",

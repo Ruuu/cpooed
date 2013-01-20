@@ -67,13 +67,11 @@ public class Model {
 				mean, variance);
 		// Odciecie rozszerzenia z nazwy pliku
 		name = name.substring(0, name.lastIndexOf('.'));
-		Controller.addImageTab(
-				result,
-				name + "_gauss_mean_"
-						+ String.format(Locale.ENGLISH, "%.2f%n", mean)
-						+ "_var_"
-						+ String.format(Locale.ENGLISH, "%.2f%n", variance)
-						+ ".png");
+		name += "_gauss_mean_" + String.format(Locale.ENGLISH, "%.2f%n", mean)
+				+ "_var_" + String.format(Locale.ENGLISH, "%.2f%n", variance)
+				+ ".png";
+		name.replaceAll(" ", "");
+		Controller.addImageTab(result, name);
 	}
 
 	/**

@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 public class MainWindow extends JFrame {
 
 	private static final int WINDOWS_BAR_HEIGHT = 35;
-	private static final String title = "NoisePicture v0.1";
+	private static final String title = "NoisePicture v1.0";
 
 	private ContentPane content;
 	private MainMenu menu;
