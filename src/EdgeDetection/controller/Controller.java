@@ -57,6 +57,22 @@ public class Controller implements Visitor
         this.defaultViewChanger = defaultViewChanger;
         errorDialog = ErrorDialog.getErrorDialog();
         this.blockingQueue = blockingQueue;
+        
+        File file=new File("output");
+
+        if (!file.exists()) 
+        {
+        	boolean success = new File("output").mkdir();
+        	if(success) 
+        	{
+        		System.out.println("Katalog: 'output' utworzony!");
+        	}
+        	else
+        	{
+        		errorDialog.showErrorDialog("Błąd podczas tworzenia katalogu output! Brak uprawnien?");
+                System.exit(0);
+        	}
+        }
     }
 
     /**
